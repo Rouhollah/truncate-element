@@ -11,4 +11,5 @@ export interface Config {
     highlightCondition: string;
     hasLiteral: boolean;
     highlightList: Array<HighlighQuery | string>;
+    mention: boolean;
 }
