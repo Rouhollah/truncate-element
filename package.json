@@ -1,6 +1,6 @@
 {
   "name": "truncate-element",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "truncate-element.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,18 +9,20 @@
     "dev": "webpack-dev-server --config webpack.config.js --hot"
   },
   "keywords": [
-    "truncate text",
-    "shortening text",
+    "truncate text","truncate-text",
+    "shortening text","shortening-text",
     "truncate",
     "shortening",
-    "finding hashtag",
-    "recognize hashtag",
-    "hashtag",
+    "finding hashtag","finding-hashtag",
+    "recognize hashtag","recognize-hashtag",
+    "hashtag","mention","find mention","find-mention",
     "highlight",
-    "highlight word",
-    "word coloring",
+    "highlight word","highlight-word",
+    "word coloring","word-coloring",
     "custom element",
+    "custom-element",
     "web component",
+    "web-component",
     "react",
     "angular",
     "vue"
@@ -29,9 +31,11 @@
     "name": "Rouhollah Torshizi",
     "email": "torshizi1@gmail.com"
   },
-  "description": " 'turncate-element' is a web component that is created based on ngx-truncate-text, which I had already created myself for angular. you can use it for any framework like Vue, React, Angular or any framewordk based on  javascript without any worries.",
+  "description": "you can use 'turncate-element' for any framework like Vue, React, Angular or any framewordk based on  javascript without any worries. it is a custom element that is created based on ngx-truncate-text, which I had already created myself for angular.",
   "homepage": "https://github.com/Rouhollah/truncate-element",
-  "bugs": "https://github.com/Rouhollah/truncate-element/issues",
+  "bugs": {
+    "url": "https://github.com/Rouhollah/truncate-element/issues"
+  },
   "license": "ISC",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",

@@ -1,5 +1,5 @@
 ﻿# truncate-element
- 'turncate-element' is a web component that is for shortening the text and includes some useful features that is created based on ngx-truncate-text. you can use it for any framework like Vue, React, Angular or any framewordk based on  javascript without any worries.
+you can use 'turncate-element' for any framework like Vue, React, Angular or any framewordk based on  javascript without any worries. it is a custom element that is created based on ngx-truncate-text, which I had already created myself for angular.
 
 
 #### see demo on stackblitz for [Angular](https://stackblitz.com/edit/angular-ivy-sverbg), [React](https://stackblitz.com/edit/react-ts-pe2oey). [Vue](https://stackblitz.com/edit/vue-kslsxv) and [simple html](https://stackblitz.com/edit/web-platform-bhoxnu).
@@ -294,6 +294,7 @@ and then use the `truncate-element` tag like other framework.
 hasLiteral|If you want to see the text as it is (including "\ r", "\ n", "\ t"), use this feature |boolean|false|1.0.0
 |highlightList|Colors the words you enter in the list with the color you specify in the list. If you enter a string without color, it will turn yellow by default.|Array<HighlighQuery\|string>| [{ name: '', color: '' }]|1.0.0
 |highlightCondition|This feature determines whether any similar word in your list found in the text will be highlighted or will find and highlight exactly the same words in the list.|string|exactly|1.0.0
+mention|Finds mention in text|boolean|false|1.1.0
 
 [back to top](#installation)
 ## <a id="note"><span style="color:yellow"> Note:</span> </a>
@@ -322,6 +323,8 @@ hasLiteral|If you want to see the text as it is (including "\ r", "\ n", "\ t"),
   	font-style: italic;
   }
   ```
-- default color for hashtags is <span style="color:#1b95e0">#1b95e0</span>  (from twitter), if you want to use custom style, use the builtin `.hashtag` class.
+- default color for hashtags is <span style="color:#1b95e0">#1b95e0</span> (from twitter), if you want to use custom style, use the builtin `.hashtag` class.
+
+- default color for mentions is <span style="color:#0095f6">#0095f6</span> (from twitter), if you want to use custom style, use the builtin `.mention` class.
 
  [back to top](#installation)
