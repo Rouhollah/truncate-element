@@ -16,7 +16,7 @@ content:
 - [Use in Simple HTML](#html)
 - [Help table](#help)
 - [Note](#note)
-- [Changes](#changeSet)
+- [Changes](#change)
 
 ## <a id="angular">Use in Angular</a>
 first of all, add `CUSTOM_ELEMENTS_SCHEMA` to `app.module`
@@ -330,7 +330,7 @@ mention|Finds mention in text|boolean|false|1.1.0
 
  [back to top](#installation)
 
- ## <a id="changeSet"><span style="color:yellow">Changes:</span> </a>
+ ## <a id="change"><span style="color:yellow">Changes:</span> </a>
   - ### v1.1.0 
     * finding mentions in text is added.
    
