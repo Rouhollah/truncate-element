@@ -12,12 +12,12 @@
 
 <body>
     <truncate-element id='ele'>
-        Lorem #ipsum dolor sit amet consectetur adipisicing elit. Natus, consectetur deserunt optio fugit adipisci
+        Lorem #ipsum dolor sit amet @consectetur adipisicing elit. Natus, consectetur deserunt optio fugit adipisci
         rerum.Iusto architecto natus quas error quibusdam expedita quae, odit explicabo dolorem velit odio mollitia
         omnis nulla enim ipsama sequi? Doloremque porro animi #adipisci cum modi nam odit consequuntur beatae quia
         voluptatum
         nesciunt neque ullam facilis fugiat non rem expedita incidunt qui sed, maxime atque molestias minima nulla
-        nostrum.
+        @nostrum.
         Aliquid inventore sint alias magni possimus odit optio quidem aliquam nulla numquam beatae vitae a reiciendis
         natus laboriosam ullam nobis? Magnam nihil #consequatur iusto nostrum a beatae modi alias culpa obcaecati
         molestiae nisi voluptates.Necessitatibus, iste."
@@ -27,8 +27,8 @@
     <br>
     <div style="direction: rtl;">
         <truncate-element
-            config='{"more":"ادامه","less":"پنهان","number":50,"highlightList":[{"name":"لب","color":"pink"},"سوار",{"name":"جنگل","color":"green"},"جنگ",{"name":"کتاب","color":"#aabbcc"}],"highlightCondition":"like","completeWord":true,"hashtag":true,"hasLiteral":true}'>
-            در این #غربت خانگی بگو هرچی باید بگی ، بگو هرچی باید بگی. برای شعر تازه اجازه بی اجازه برای شعر تازه اجازه
+            config='{"more":"ادامه","less":"پنهان","number":50,"highlightList":[{"name":"لب","color":"pink"},"سوار",{"name":"جنگل","color":"green"},"جنگ",{"name":"کتاب","color":"#aabbcc"}],"highlightCondition":"like","completeWord":true,"hashtag":true,"hasLiteral":true,"mention":true}'>
+            در این #غربت @خانگی بگو هرچی باید بگی ، بگو هرچی باید بگی. برای شعر تازه اجازه بی اجازه برای شعر تازه اجازه
             بی اجازه.
             اگه سبزم اگه جنگل ، اگه ماهی اگه دریا ، اگه اسمم همه جا هست روی لبها تو #کتابا ، اگه عکس چل ستونم اگه شهری
             بی حساب واسه آرش تیر آخر واسه جاده یه سوار
@@ -48,12 +48,14 @@
              highlightList: [
                  { name: "dolor", color: "red" },
                  "consequuntur", { name: "equ", color: "blue" },
-                 { name: "optio", color: "green" }
+                 { name: "optio", color: "green" },
+                  { name: "ostr", color: "pink" },
              ],
              highlightCondition: "like",
              completeWord: true,
              hashtag: true,
-             hasLiteral: true
+             hasLiteral: true,
+             mention:true
          });
          var elem = document.getElementById("ele");
          elem.setAttribute('config', config2)

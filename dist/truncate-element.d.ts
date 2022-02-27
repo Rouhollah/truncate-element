@@ -13,6 +13,7 @@ export declare class TruncateElement extends HTMLElement {
     highlightList: HighlighQuery[];
     text: string;
     replace: boolean;
+    mention: boolean;
     connectedLoaded: boolean;
     dataLoaded: boolean;
     tempHtml: string;
@@ -25,8 +26,9 @@ export declare class TruncateElement extends HTMLElement {
     fill(text: string): void;
     showFullText(mouseDown: MouseEvent): void;
     hideSomeText(mouseDown: MouseEvent): void;
+    cutFindHighlight(completeWord: boolean, hashtag: boolean, mention: boolean, text: string, highlightCondition?: string, highlightQuery?: Array<HighlighQuery | string>, number?: number): string;
     highlight(content: string, highlightCondition: string | undefined, highlightQuery: Array<HighlighQuery | string>): string;
     checkWordCut(number: number, text: string): string;
     findHashtag(text: string): string;
-    applyCondition(text: string, number: number, completeWord?: boolean, hashtag?: boolean): string;
+    findMention(text: string): string;
 }

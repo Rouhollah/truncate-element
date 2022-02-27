@@ -12,6 +12,7 @@ export class TruncateElement extends HTMLElement {
         hasLiteral: false,
         highlightCondition: 'exactly',
         highlightList: [{ name: '', color: '' }],
+        mention: false
     };
     number: number = 100;
     more: string = "show";
@@ -23,6 +24,7 @@ export class TruncateElement extends HTMLElement {
     highlightList: HighlighQuery[] = [{ name: '', color: '' }];
     text: string = ""
     replace: boolean = false;
+    mention: boolean = false;
 
     connectedLoaded = false;
     dataLoaded = false;
@@ -75,11 +77,12 @@ export class TruncateElement extends HTMLElement {
             this.number = this.config.number ? this.config.number : this.number;
             this.more = this.config.more ? this.config.more : this.more;
             this.less = this.config.less ? this.config.less : this.less;
-            this._highlightQuery = this.config.highlightList;
-            this.highlightCondition = this.config.highlightCondition;
-            this.completeWord = this.config.completeWord;
-            this.hashtag = this.config.hashtag;
-            this.hasLiteral = this.config.hasLiteral;
+            this._highlightQuery = this.config.highlightList ? this.config.highlightList : this._highlightQuery;
+            this.highlightCondition = this.config.highlightCondition ? this.config.highlightCondition : this.highlightCondition;
+            this.completeWord = this.config.completeWord ? this.config.completeWord : this.completeWord;
+            this.hashtag = this.config.hashtag ? this.config.hashtag : this.hashtag;
+            this.hasLiteral = this.config.hasLiteral ? this.config.hasLiteral : this.hasLiteral;
+            this.mention = this.config.mention ? this.config.mention : this.mention;
         }
         else
             return;
@@ -114,8 +117,7 @@ export class TruncateElement extends HTMLElement {
         this.text = text;
         let remainText = "";
         if (text.length > this.number) {
-            remainText = this.applyCondition(text, this.number, this.completeWord, this.hashtag);
-            remainText = this.highlight(remainText, this.highlightCondition, this._highlightQuery);
+            remainText = this.cutFindHighlight(this.completeWord, this.hashtag, this.mention, text, this.highlightCondition, this._highlightQuery, this.number);
             // برای نمایش ادامه یا پنهان
             this.replace = true;
             this.innerHTML = remainText + ' ... ';
@@ -130,14 +132,15 @@ export class TruncateElement extends HTMLElement {
             this.appendChild(span);
         }
         else {
-            text = this.hashtag ? this.findHashtag(text) : text;
-            text = this.highlight(text, this.highlightCondition, this._highlightQuery);
+            text = this.cutFindHighlight(this.completeWord, this.hashtag, this.mention, text, this.highlightCondition, this._highlightQuery);
             this.innerHTML = text;
         }
         //اعمال شود این کلاس قرار داده می شود  html در \n برای اینکه کاراکتر های
         if (this.hasLiteral)
             this.style.whiteSpace = 'pre-line';
     }
+
+
 
     /*
      * نمایش کامل متن
@@ -149,8 +152,7 @@ export class TruncateElement extends HTMLElement {
         span.style.color = '#ff00ff';
         span.style.cursor = 'pointer';
         span.classList.add("toggleText");
-        let fullText = this.hashtag ? this.findHashtag(this.text) : this.text;
-        this.innerHTML = this.highlight(fullText, this.highlightCondition, this._highlightQuery);
+        this.innerHTML = this.cutFindHighlight(this.completeWord, this.hashtag, this.mention, this.text, this.highlightCondition, this._highlightQuery);
         //اعمال شود این کلاس قرار داده می شود  html در \n برای اینکه کاراکتر های
         if (this.hasLiteral)
             this.style.whiteSpace = 'pre-line';
@@ -166,9 +168,7 @@ export class TruncateElement extends HTMLElement {
      * @param mouseDown {mousedown} mouse event
      */
     hideSomeText(mouseDown: MouseEvent) {
-        const temp = this.applyCondition(this.text, this.number, this.completeWord, this.hashtag);
-        const remainText = this.highlight(temp, this.highlightCondition, this._highlightQuery);
-
+        const remainText = this.cutFindHighlight(this.completeWord, this.hashtag, this.mention, this.text, this.highlightCondition, this._highlightQuery, this.number);
         const span = document.createElement('span');
         span.style.color = '#ff00ff';
         span.classList.add("toggleText")
@@ -186,13 +186,30 @@ export class TruncateElement extends HTMLElement {
         this.replace = true;
     }
 
+    /** implement cut text, find hashtag and mention and highlight 
+     * @param completeWord {boolean} condition to cut
+     * @param hashtag {boolean} condition to find hashtag
+     * @param mention {boolean} condition to find mentiong
+     * @param text {string} text to cut
+     * @param highlightCondition {string} condition to highlight
+     * @param highlightQuery {string} query to highlight
+     * @returns {string} cutted text
+    */
+    cutFindHighlight(completeWord: boolean, hashtag: boolean, mention: boolean, text: string, highlightCondition = 'exactly', highlightQuery: Array<HighlighQuery | string> = [], number?: number) {
+        if (number)
+            text = completeWord ? this.checkWordCut(number, text) : text.substring(0, number);
+        text = hashtag ? this.findHashtag(text) : text;
+        text = mention ? this.findMention(text) : text;
+        text = this.highlight(text, highlightCondition, highlightQuery);
+        return text;
+    }
 
 
     /**
      * رنگ کردن کلمات داده شده در متن
      * @param content
      */
-    highlight(content: string, highlightCondition = "", highlightQuery: Array<HighlighQuery | string>) {
+    highlight(content: string, highlightCondition = "", highlightQuery: Array<HighlighQuery | string>): string {
         //روی دایرکتیو تعریف نشود خود متن را بر می کرداند highlightList اگر ورودی
         if (!highlightQuery || !highlightQuery.length) {
             return content;
@@ -263,24 +280,12 @@ export class TruncateElement extends HTMLElement {
         return text;
     }
 
-    /** check conditions and return text with them */
-    applyCondition(text: string, number: number, completeWord: boolean = false, hashtag: boolean = false) {
-        let manipulatedText = "";
-        if (completeWord && hashtag) {
-            const temp = this.checkWordCut(number, text);
-            manipulatedText = this.findHashtag(temp);
-        }
-        else if (completeWord) {
-            manipulatedText = this.checkWordCut(number, text);
-        }
-        else if (hashtag) {
-            const temp = text.substring(0, number);
-            manipulatedText = this.findHashtag(temp);
-        }
-        else {
-            manipulatedText = text.substring(0, number);
-        }
-        return manipulatedText;
+    /** find mention from text */
+    findMention(text: string) {
+        text = text.replace(/(^|\s)(@[^0-9|\.](\w{1,30}|\.)+)/gmi, (match) => {
+            return `<span class="mention" style="color:#0095f6">${match}</span>`;
+        });
+        return text;
     }
 
 }
