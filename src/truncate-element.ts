@@ -242,19 +242,21 @@ export class TruncateElement extends HTMLElement {
                 //به صورت آبجکت باشند highlightList اگر کلمات داده شده در
                 if (typeof q !== 'string' && q.name) {
                     let words = content.match(new RegExp(q.name, "gmi"));
+                    words = [...new Set(words)];
                     if (words)
                         for (const word of words) {
                             const color = q.color ? q.color : 'yellow';
-                            content = content.replace(new RegExp(q.name, "gmi"), `<span style="background-color:${color}">${word}</span>`);
+                            content = content.replace(new RegExp(word, "gm"), `<span style="background-color:${color}">${word}</span>`);
                         }
                 }
                 //به صورت رشته باشند highlightList اگر کلمات داده شده در
                 else {
                     if (typeof q === 'string') {
                         let words = content.match(new RegExp(q, "gmi"));
+                        words = [...new Set(words)];
                         if (words)
                             for (const word of words) {
-                                content = content.replace(new RegExp(q, "gmi"), `<span style="background-color:yellow">${word}</span>`);
+                                content = content.replace(new RegExp(word, "gm"), `<span style="background-color:yellow">${word}</span>`);
                             }
                     }
                 }

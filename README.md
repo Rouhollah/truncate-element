@@ -331,6 +331,8 @@ mention|Finds mention in text|boolean|false|1.1.0
  [back to top](#installation)
 
  ## <a id="change"><span style="color:yellow">Changes:</span> </a>
+  - ### v1.1.1
+    * If there were uppercase and lowercase words in the sentence, when they were highlighted, all words were changed to the last word found. 
   - ### v1.1.0 
     * finding mentions in text is added.
    
