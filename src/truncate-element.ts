@@ -259,7 +259,7 @@ export class TruncateElement extends HTMLElement {
      */
     private linkIdentify(text: string): string {
         // main regex
-        // regex = /(^|[ ])(ftp:\/\/|(https?:)\/\/(www\.)?|www\.)([\w]+\.){1}(((\:|\/|\?){1}\S*)*|\w+)+/gm
+        // regex = /(^|[ ])(ftp:\/\/|(https?:)\/\/(www\\.)?|www\.)([\w\-\.]+)(((\:|\/|\?){1}\S*)*|\w+)+/gm
         let regex;
         let protocolRegex = "(ftp:\\/\\/|(https?:)\\/\\/(www\\.)?|www\\.)";
         let domainRegex = "";
