@@ -1,5 +1,5 @@
-import { HighlighQuery, Config } from "./interfaces";
-export { Config, HighlighQuery } from "./interfaces";
+import { HighlighQuery, Config, IdentifyLink } from "./interfaces";
+export { Config, HighlighQuery, IdentifyLink } from "./interfaces";
 export declare class TruncateElement extends HTMLElement {
     _highlightQuery: Array<HighlighQuery | string>;
     config: Config;
@@ -14,6 +14,12 @@ export declare class TruncateElement extends HTMLElement {
     text: string;
     replace: boolean;
     mention: boolean;
+    identifyLink: IdentifyLink;
+    linkList: Array<string>;
+    linkCount: number;
+    hashtagCount: number;
+    mentionCount: number;
+    replaceString: string;
     connectedLoaded: boolean;
     dataLoaded: boolean;
     tempHtml: string;
@@ -23,12 +29,15 @@ export declare class TruncateElement extends HTMLElement {
     attributeChangedCallback(attrName: string, _oldVal: any, _newVal: any): void;
     static get observedAttributes(): string[];
     private initialValues;
-    fill(text: string): void;
-    showFullText(mouseDown: MouseEvent): void;
-    hideSomeText(mouseDown: MouseEvent): void;
-    cutFindHighlight(completeWord: boolean, hashtag: boolean, mention: boolean, text: string, highlightCondition?: string, highlightQuery?: Array<HighlighQuery | string>, number?: number): string;
-    highlight(content: string, highlightCondition: string | undefined, highlightQuery: Array<HighlighQuery | string>): string;
-    checkWordCut(number: number, text: string): string;
-    findHashtag(text: string): string;
-    findMention(text: string): string;
+    private main;
+    private showFullText;
+    private hideSomeText;
+    private cutFindHighlight;
+    private linkIdentify;
+    private recognizingProtocol;
+    private recongnizingDomain;
+    private highlight;
+    private checkWordCut;
+    private findHashtag;
+    private findMention;
 }

@@ -1,6 +1,6 @@
 {
   "name": "truncate-element",
-  "version": "1.1.1",
+  "version": "1.8.0",
   "main": "truncate-element.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -25,7 +25,8 @@
     "web-component",
     "react",
     "angular",
-    "vue"
+    "vue",
+    "identifying url", "recongnizing url", "identifying-url", "recognizing-url"
   ],
   "author": {
     "name": "Rouhollah Torshizi",

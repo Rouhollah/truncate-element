@@ -2,6 +2,16 @@ export interface HighlighQuery {
     name?: string;
     color?: string;
 }
+export interface IdentifyLink {
+    enabled: boolean;
+    hasQueryString?: boolean;
+    title?: string;
+    class?: string;
+    style?: string;
+    domain?: Array<string>;
+    protocol?: Array<string>;
+    target?: string;
+}
 export interface Config {
     more: string;
     less: string;
@@ -12,4 +22,5 @@ export interface Config {
     hasLiteral: boolean;
     highlightList: Array<HighlighQuery | string>;
     mention: boolean;
+    identifyLink?: IdentifyLink;
 }

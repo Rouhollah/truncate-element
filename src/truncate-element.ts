@@ -1,8 +1,9 @@
-import { HighlighQuery, Config } from "./interfaces";
-export { Config, HighlighQuery } from "./interfaces"
+import { HighlighQuery, Config, IdentifyLink } from "./interfaces";
+export { Config, HighlighQuery, IdentifyLink } from "./interfaces"
 
 export class TruncateElement extends HTMLElement {
     _highlightQuery: Array<HighlighQuery | string> = [];
+
     config: Config = {
         number: 0,
         more: "",
@@ -12,7 +13,7 @@ export class TruncateElement extends HTMLElement {
         hasLiteral: false,
         highlightCondition: 'exactly',
         highlightList: [{ name: '', color: '' }],
-        mention: false
+        mention: false,
     };
     number: number = 100;
     more: string = "show";
@@ -22,17 +23,32 @@ export class TruncateElement extends HTMLElement {
     hasLiteral: boolean = false;
     highlightCondition: string = 'exactly';
     highlightList: HighlighQuery[] = [{ name: '', color: '' }];
-    text: string = ""
+    text: string = "";
+    /** to display show or hide button*/
     replace: boolean = false;
     mention: boolean = false;
-
+    identifyLink: IdentifyLink = {
+        hasQueryString: false,
+        title: "",
+        class: "",
+        style: "text-decoration:none;color:blue;",
+        domain: [],
+        protocol: [],
+        target: "_blank",
+        enabled: false
+    };
+    linkList: Array<string> = [];
+    linkCount: number = 0;
+    hashtagCount: number = 0;
+    mentionCount: number = 0;
+    replaceString = "***";
     connectedLoaded = false;
     dataLoaded = false;
     tempHtml = "";
 
     constructor() {
         super();
-
+        (<any>window).trun = this;
         const observer = new MutationObserver(() => {
             if (this.connectedLoaded && !this.dataLoaded) {
                 this.initialValues();
@@ -43,6 +59,10 @@ export class TruncateElement extends HTMLElement {
         observer.observe(this, { characterData: false, childList: true, attributes: false });
     }
 
+    /** is object instanse of HighlighQuery / آیا آبجکت نمونه ای از HighlighQuery است 
+     * @param {object}  object to check
+     * @returns {boolean}
+    */
     private instanceOfHighlighQuery(object: any): object is HighlighQuery {
         return typeof object === 'string' ? false : 'name' in object;
     }
@@ -61,7 +81,7 @@ export class TruncateElement extends HTMLElement {
     static get observedAttributes() {
         return ['config'];
     }
-
+    /** inital values / مقدار دهی اولیه */
     private initialValues(attrName: string = "config") {
 
         if (!this.innerHTML) {
@@ -83,10 +103,21 @@ export class TruncateElement extends HTMLElement {
             this.hashtag = this.config.hashtag ? this.config.hashtag : this.hashtag;
             this.hasLiteral = this.config.hasLiteral ? this.config.hasLiteral : this.hasLiteral;
             this.mention = this.config.mention ? this.config.mention : this.mention;
+            if (this.config.identifyLink) {
+                this.identifyLink.enabled = this.config.identifyLink.enabled;
+                this.identifyLink.title = this.config.identifyLink.title ? this.config.identifyLink.title : this.identifyLink.title;
+                this.identifyLink.class = this.config.identifyLink.class ? this.config.identifyLink.class : this.identifyLink.class;
+                this.identifyLink.style = this.config.identifyLink.style ? this.config.identifyLink.style : this.identifyLink.style;
+                this.identifyLink.domain = this.config.identifyLink.domain ? this.config.identifyLink.domain : this.identifyLink.domain;
+                this.identifyLink.protocol = this.config.identifyLink.protocol ? this.config.identifyLink.protocol : this.identifyLink.protocol;
+                this.identifyLink.target = this.config.identifyLink.target ? this.config.identifyLink.target : this.identifyLink.target;
+                this.identifyLink.hasQueryString = this.config.identifyLink.hasQueryString ? this.config.identifyLink.hasQueryString : this.identifyLink.hasQueryString;
+            }
         }
         else
             return;
 
+        // sort highlight query
         if (this._highlightQuery && this._highlightQuery.length)
             this._highlightQuery.sort((a: HighlighQuery | string, b: HighlighQuery | string): number => {
                 if (this.instanceOfHighlighQuery(a) && this.instanceOfHighlighQuery(b)) {
@@ -108,17 +139,19 @@ export class TruncateElement extends HTMLElement {
                     return 0;
                 return 0;
             });
-        this.fill(this.tempHtml);
+        this.main(this.tempHtml);
         this.dataLoaded = true;
     }
 
-    fill(text: string) {
+    /** main method, start working 
+    * @param text {string}
+    */
+    private main(text: string): void {
         if (!this.hasLiteral) text = text.replace(/(\r\n\t|\n|\r\t)/gm, ' ');
         this.text = text;
         let remainText = "";
         if (text.length > this.number) {
             remainText = this.cutFindHighlight(this.completeWord, this.hashtag, this.mention, text, this.highlightCondition, this._highlightQuery, this.number);
-            // برای نمایش ادامه یا پنهان
             this.replace = true;
             this.innerHTML = remainText + ' ... ';
             const span = document.createElement('span');
@@ -142,11 +175,10 @@ export class TruncateElement extends HTMLElement {
 
 
 
-    /*
-     * نمایش کامل متن
+    /** show full text / نمایش کامل متن
      * @param mouseDown {mousedown} mouse event
      */
-    showFullText(mouseDown: MouseEvent) {
+    private showFullText(mouseDown: MouseEvent): void {
         const span = document.createElement('span');
         span.innerHTML = " " + this.less;
         span.style.color = '#ff00ff';
@@ -159,15 +191,14 @@ export class TruncateElement extends HTMLElement {
 
         span.addEventListener('click', (event) => this.hideSomeText(event));
         this.appendChild(span);
-        // جلوگیری از کلیک روی عنصر پدر
+        // prevent from click on parent element
         mouseDown.stopPropagation();
         this.replace = false;
     }
-    /*
-     * نمایش قسمتی از متن بر اساس تعداد کاراکتر خواسته شده
+    /** Display part of the text based on the number of characters requested / نمایش قسمتی از متن بر اساس تعداد کاراکتر خواسته شده
      * @param mouseDown {mousedown} mouse event
      */
-    hideSomeText(mouseDown: MouseEvent) {
+    private hideSomeText(mouseDown: MouseEvent): void {
         const remainText = this.cutFindHighlight(this.completeWord, this.hashtag, this.mention, this.text, this.highlightCondition, this._highlightQuery, this.number);
         const span = document.createElement('span');
         span.style.color = '#ff00ff';
@@ -181,12 +212,12 @@ export class TruncateElement extends HTMLElement {
 
         span.addEventListener('click', (event) => this.showFullText(event));
         this.appendChild(span);
-        // جلوگیری از کلیک روی عنصر پدر
+        // prevent from click on parent element
         mouseDown.stopPropagation();
         this.replace = true;
     }
 
-    /** implement cut text, find hashtag and mention and highlight 
+    /** cut text, find hashtag , mention , highlight and urls / کوتاه کردن متن ، پیدا کردن هشتگ ، منشن ، هایلایت و یو آر ال ها
      * @param completeWord {boolean} condition to cut
      * @param hashtag {boolean} condition to find hashtag
      * @param mention {boolean} condition to find mentiong
@@ -195,21 +226,102 @@ export class TruncateElement extends HTMLElement {
      * @param highlightQuery {string} query to highlight
      * @returns {string} cutted text
     */
-    cutFindHighlight(completeWord: boolean, hashtag: boolean, mention: boolean, text: string, highlightCondition = 'exactly', highlightQuery: Array<HighlighQuery | string> = [], number?: number) {
+    private cutFindHighlight(completeWord: boolean, hashtag: boolean, mention: boolean, text: string, highlightCondition = 'exactly', highlightQuery: Array<HighlighQuery | string> = [], number?: number) {
         if (number)
             text = completeWord ? this.checkWordCut(number, text) : text.substring(0, number);
+        if (this.identifyLink.enabled) {
+            text = this.linkIdentify(text);
+        }
         text = hashtag ? this.findHashtag(text) : text;
         text = mention ? this.findMention(text) : text;
         text = this.highlight(text, highlightCondition, highlightQuery);
+
+        if (this.linkList.length > 0) {
+            text = this.linkList.reduce((text, link, currentIndex) => {
+                const href = link.includes('http') ? link.trimStart() : 'https://' + link.trimStart();
+                const target = this.identifyLink.target ? this.identifyLink.target : '_blank';
+                const title = this.identifyLink.title ? this.identifyLink.title : '';
+                const klass = this.identifyLink.class ? this.identifyLink.class : '';
+                const style = this.identifyLink.style ? this.identifyLink.style : '';
+                return text.replace(`${this.replaceString}${currentIndex}${this.replaceString}`, `<a href="${href}" target="${target}" title="${title}" style="${style}" class="${klass}">${link}</a>`);
+            }, text);
+        }
+        this.linkCount = 0;
+        this.linkList = [];
         return text;
     }
 
 
     /**
-     * رنگ کردن کلمات داده شده در متن
-     * @param content
+     * find url in text and add to linkList
+     * @param text {string} text to find url
+     * @returns {string} text with url
      */
-    highlight(content: string, highlightCondition = "", highlightQuery: Array<HighlighQuery | string>): string {
+    private linkIdentify(text: string): string {
+        // main regex
+        // regex = /(^|[ ])(ftp:\/\/|(https?:)\/\/(www\.)?|www\.)([\w]+\.){1}(((\:|\/|\?){1}\S*)*|\w+)+/gm
+        let regex;
+        let protocolRegex = "(ftp:\\/\\/|(https?:)\\/\\/(www\\.)?|www\\.)";
+        let domainRegex = "";
+        let queryString = "\\w+";
+        const afterDomain = "(((\\:|\\/|\\?){1}\\S*)*|\\w+)+";
+        if (this.identifyLink.protocol && this.identifyLink.protocol.length > 0)
+            protocolRegex = this.recognizingProtocol();
+        if (this.identifyLink.domain && this.identifyLink.domain.length > 0)
+            domainRegex = this.recongnizingDomain();
+        if (this.identifyLink.hasQueryString)
+            queryString = afterDomain;
+
+        regex = new RegExp(`(^|[ ])${protocolRegex}([\\w]+\\.){1}${domainRegex}${queryString}`, 'gm');
+
+        let m;
+        while ((m = regex.exec(text)) !== null) {
+            this.linkList.push(m[0]);
+            text = text.replace(m[0], this.replaceString + this.linkCount + this.replaceString);
+            this.linkCount++;
+        }
+        return text;
+    }
+    /** create regex for prefix | protocol
+     * @returns {string} regex
+     */
+    private recognizingProtocol(): string {
+        if (this.identifyLink.protocol && this.identifyLink.protocol.length > 0) {
+            
+            this.identifyLink.protocol = this.identifyLink.protocol.sort();
+            let protocol = [];
+            if (this.identifyLink.protocol.find(p => p === 'ftp')) {
+                protocol.push("ftp:\\/\\/");
+            }
+            if (this.identifyLink.protocol.find(p => p === 'http')) {
+                protocol.push(`http:\\/\\/(www\\.)?`);
+            }
+            if (this.identifyLink.protocol.find(p => p === 'https')) {
+                protocol.push(`https:\\/\\/(www\\.)?`);
+            }
+            if (this.identifyLink.protocol.find(p => p === 'www')) {
+                protocol.push("www\\.?");
+            }
+            return "(" + protocol.join('|') + ")";
+        }
+        return "";
+    }
+    /**
+     * create regex for domain
+     * @returns {string} regex
+     */
+    private recongnizingDomain(): string {
+        return this.identifyLink.domain ? "(" + this.identifyLink.domain.join('|') + ")" : "";
+    }
+
+    /**
+     * Highlight the given words in the text / رنگ کردن کلمات داده شده در متن
+     * @param content {string} text to highlight
+     * @param highlightCondition {string} condition to highlight
+     * @param highlightQuery {Array<HighlighQuery | string>} 
+     * @returns {string} highlighted text
+     */
+    private highlight(content: string, highlightCondition = "", highlightQuery: Array<HighlighQuery | string>): string {
         //روی دایرکتیو تعریف نشود خود متن را بر می کرداند highlightList اگر ورودی
         if (!highlightQuery || !highlightQuery.length) {
             return content;
@@ -246,7 +358,7 @@ export class TruncateElement extends HTMLElement {
                     if (words)
                         for (const word of words) {
                             const color = q.color ? q.color : 'yellow';
-                            content = content.replace(new RegExp(word, "gm"), `<span style="background-color:${color}">${word}</span>`);
+                            content = content.replace(new RegExp(q.name, "gm"), `<span style="background-color:${color}">${word}</span>`);
                         }
                 }
                 //به صورت رشته باشند highlightList اگر کلمات داده شده در
@@ -265,25 +377,35 @@ export class TruncateElement extends HTMLElement {
         }
     }
 
-    /** check the word cut */
-    checkWordCut(number: number, text: string) {
-        let i = 0
+    /** check the word cut / بررسی کلمات برش شده
+     * @param number {number}
+     * @param text {string}
+     * @returns {string}
+     */
+    private checkWordCut(number: number, text: string): string {
+        let i = 0;
         for (i = number; i < text.length; i++) {
             if (text[i] == ' ') break;
         }
         return text.substring(0, i);
     }
 
-    /** find hashtag from text */
-    findHashtag(text: string) {
+    /** find hashtags in text / یافتن هشتگ در متن
+     * @param text {string}
+     * @returns {string}
+     */
+    private findHashtag(text: string): string {
         text = text.replace(/(^|\s)(#[\p{Pc}\p{N}\p{L}\u200cÀ-ÖØ-öø-ʸ(_)]+)/ugmi, (match) => {
             return `<span class="hashtag" style="color:#1b95e0">${match}</span>`;
         });
         return text;
     }
 
-    /** find mention from text */
-    findMention(text: string) {
+    /** find mentions in text / یافتن منشن در متن
+     * @param text {string}
+     * @returns {string}
+    */
+    private findMention(text: string): string {
         text = text.replace(/(^|\s)(@[^0-9|\.](\w{1,30}|\.)+)/gmi, (match) => {
             return `<span class="mention" style="color:#0095f6">${match}</span>`;
         });

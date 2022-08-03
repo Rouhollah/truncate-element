@@ -73,7 +73,10 @@ highlightList: [
 highlightCondition: "like",
 completeWord: true,
 hashtag: true,
-hasLiteral: true
+hasLiteral: true,
+identifyLink: {
+                enabled: true,
+            }
 });
 
 ngOnInit()  or  anyfunction() {
@@ -274,7 +277,10 @@ and then use the `truncate-element` tag like other framework.
              highlightCondition: "like",
              completeWord: true,
              hashtag: true,
-             hasLiteral: true
+             hasLiteral: true,
+             identifyLink: {
+                enabled: true,
+            }
          });
          var elem = document.getElementById("ele");
          elem.setAttribute('config', config2);
@@ -296,7 +302,19 @@ hasLiteral|If you want to see the text as it is (including "\ r", "\ n", "\ t"),
 |highlightList|Colors the words you enter in the list with the color you specify in the list. If you enter a string without color, it will turn yellow by default.|Array<HighlighQuery\|string>| [{ name: '', color: '' }]|1.0.0
 |highlightCondition|This feature determines whether any similar word in your list found in the text will be highlighted or will find and highlight exactly the same words in the list.|string|exactly|1.0.0
 mention|Finds mention in text|boolean|false|1.1.0
+identifyLink|identifying Url in text|IdentifyLink|enabled:false|1.8.0
 
+## IdentifyLink properties
+|property|description|type|default|version|
+|----|----|-----|-----|-----|
+enabled|by this property, activate or deactivate|boolean|false|1.8.0
+hasQueryString|identifying query string|boolean|false|1.8.0
+title|title attribute for anchor tag|string|""|1.8.0
+class|class for anchor tag|string|""|1.8.0
+style|style for anchor tag|string|text-decoration:none;color:blue;|1.8.0
+domain|array of suffix like ['com','ir','gov']|Array\<string\>|[]|1.8.0
+protocol|array of prefix like ['ftp','www','http']|Array\<string\>|[]|1.8.0
+target|refers to a window, tab or frame inside a page|string|_blank|1.8.0
 [back to top](#installation)
 ## <a id="note"><span style="color:yellow"> Note:</span> </a>
 - You can use `Config` and `HighlighQuery` interfaces for type of properties.
@@ -331,6 +349,12 @@ mention|Finds mention in text|boolean|false|1.1.0
  [back to top](#installation)
 
  ## <a id="change"><span style="color:yellow">Changes:</span> </a>
+  - ### v1.8.0
+     The following features have been added:
+    * Identify the link
+    * Query string identification
+    * Add title, target, class and style
+    * Domain and protocol detection
   - ### v1.1.1
     * If there were uppercase and lowercase words in the sentence, when they were highlighted, all words were changed to the last word found. 
   - ### v1.1.0 
