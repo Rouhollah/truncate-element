@@ -318,6 +318,27 @@ target|refers to a window, tab or frame inside a page|string|_blank|1.8.0
 
 [back to top](#installation)
 ## <a id="note"><span style="color:yellow"> Note:</span> </a>
+- if determine protocol and domain in identifying property, URLs identify that have both protocol and domain. example:
+```
+...
+  mention: true,
+  identifyLink: {
+     enabled: true,
+     hasQueryString: true,
+     title: "",
+     class: "roja sample",
+     style: '',
+     domain: ['ir', 'com'],
+     protocol: ['www'],
+     target: "_blank",
+ }
+...
+```
+  and in text you have:
+  ... https://www.sonys-emicon.com/en/technology/, ...  quam, www.irib.ir, quis, ftp://quod.tis, quos,...
+  Only this URL is recognized --> 'www.irib.ir' . for all URLs use blank array for domain and protocol properties.
+  
+
 - You can use `Config` and `HighlighQuery` interfaces for type of properties.
 
   ```
