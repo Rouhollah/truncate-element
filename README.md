@@ -315,6 +315,7 @@ style|style for anchor tag|string|text-decoration:none;color:blue;|1.8.0
 domain|array of suffix like ['com','ir','gov']|Array\<string\>|[]|1.8.0
 protocol|array of prefix like ['ftp','www','http']|Array\<string\>|[]|1.8.0
 target|refers to a window, tab or frame inside a page|string|_blank|1.8.0
+
 [back to top](#installation)
 ## <a id="note"><span style="color:yellow"> Note:</span> </a>
 - You can use `Config` and `HighlighQuery` interfaces for type of properties.
