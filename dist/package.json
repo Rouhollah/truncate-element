@@ -1,6 +1,6 @@
 {
   "name": "truncate-element",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "main": "truncate-element.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

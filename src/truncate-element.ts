@@ -272,7 +272,7 @@ export class TruncateElement extends HTMLElement {
         if (this.identifyLink.hasQueryString)
             queryString = afterDomain;
 
-        regex = new RegExp(`(^|[ ])${protocolRegex}([\\w]+\\.){1}${domainRegex}${queryString}`, 'gm');
+        regex = new RegExp(`(^|[ ])${protocolRegex}([\\w\\-\\.]+)${domainRegex}${queryString}`, 'gm');
 
         let m;
         while ((m = regex.exec(text)) !== null) {
