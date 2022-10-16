@@ -1,24 +1,34 @@
 {
   "name": "truncate-element",
-  "version": "1.8.1",
+  "version": "2.0.0",
+  "description": "you can use 'truncate-element' for any framework like Vue, React, Angular or any framework based on  javascript without any worries. it is a custom element that is created based on ngx-truncate-text, which I had already created myself for angular.",
   "main": "truncate-element.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --open",
     "build": "webpack --config webpack.config.prod.js",
-    "dev": "webpack-dev-server --open --config webpack.config.js --hot"
+    "dev": "webpack-dev-server --config webpack.config.js"
   },
   "keywords": [
-    "truncate text","truncate-text",
-    "shortening text","shortening-text",
+    "truncate text",
+    "truncate-text",
+    "shortening text",
+    "shortening-text",
     "truncate",
     "shortening",
-    "finding hashtag","finding-hashtag",
-    "recognize hashtag","recognize-hashtag",
-    "hashtag","mention","find mention","find-mention",
+    "finding hashtag",
+    "finding-hashtag",
+    "recognize hashtag",
+    "recognize-hashtag",
+    "hashtag",
+    "mention",
+    "find mention",
+    "find-mention",
     "highlight",
-    "highlight word","highlight-word",
-    "word coloring","word-coloring",
+    "highlight word",
+    "highlight-word",
+    "word coloring",
+    "word-coloring",
     "custom element",
     "custom-element",
     "web component",
@@ -26,24 +36,29 @@
     "react",
     "angular",
     "vue",
-    "identifying url", "recongnizing url", "identifying-url", "recognizing-url"
+    "identifying url",
+    "recongnizing url",
+    "identifying-url",
+    "recognizing-url"
   ],
   "author": {
     "name": "Rouhollah Torshizi",
     "email": "torshizi1@gmail.com"
   },
-  "description": "you can use 'turncate-element' for any framework like Vue, React, Angular or any framewordk based on  javascript without any worries. it is a custom element that is created based on ngx-truncate-text, which I had already created myself for angular.",
-  "homepage": "https://github.com/Rouhollah/truncate-element",
   "bugs": {
     "url": "https://github.com/Rouhollah/truncate-element/issues"
   },
   "license": "ISC",
+  "homepage": "https://github.com/Rouhollah/truncate-element#readme",
+  "dependencies": {},
   "devDependencies": {
-    "clean-webpack-plugin": "^3.0.0",
-    "ts-loader": "^6.2.1",
-    "typescript": "^4.5.3",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.9.0"
+    "clean-webpack-plugin": "^4.0.0",
+    "html-loader": "^4.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.8.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
   }
 }

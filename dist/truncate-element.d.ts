@@ -1,5 +1,7 @@
-import { HighlighQuery, Config, IdentifyLink } from "./interfaces";
+import { ProccessModel } from "./base";
+import { HighlighQuery, Config, IdentifyLink, GeneralModel, Type } from "./interfaces";
 export { Config, HighlighQuery, IdentifyLink } from "./interfaces";
+export { ProccessModel, WordModel } from "./base";
 export declare class TruncateElement extends HTMLElement {
     _highlightQuery: Array<HighlighQuery | string>;
     config: Config;
@@ -12,9 +14,11 @@ export declare class TruncateElement extends HTMLElement {
     highlightCondition: string;
     highlightList: HighlighQuery[];
     text: string;
-    replace: boolean;
+    /** to display show or hide button*/
+    truncated: boolean;
     mention: boolean;
     identifyLink: IdentifyLink;
+    userModels: Array<GeneralModel>;
     linkList: Array<string>;
     linkCount: number;
     hashtagCount: number;
@@ -23,21 +27,36 @@ export declare class TruncateElement extends HTMLElement {
     connectedLoaded: boolean;
     dataLoaded: boolean;
     tempHtml: string;
+    wordArray: Array<string>;
+    remainText: string;
+    fullText: string;
     constructor();
-    private instanceOfHighlighQuery;
+    addUserModel(...userModel: Array<Type<ProccessModel>>): void;
     connectedCallback(): void;
     attributeChangedCallback(attrName: string, _oldVal: any, _newVal: any): void;
     static get observedAttributes(): string[];
+    /** initial values */
     private initialValues;
+    /** main method, start working
+    * @param text {string}
+    */
     private main;
-    private showFullText;
-    private hideSomeText;
-    private cutFindHighlight;
-    private linkIdentify;
-    private recognizingProtocol;
-    private recongnizingDomain;
-    private highlight;
-    private checkWordCut;
-    private findHashtag;
-    private findMention;
+    /**
+     * display text in first time
+     * @param text
+     * @param toggle
+     */
+    private initialText;
+    /**
+     * display string after click on toggle text
+     * @param text string
+     * @param mouseDown mouse event
+     */
+    private showText;
+    /**
+     * create span for toggling
+     * @param toggle custom word for toggle
+     * @returns
+     */
+    private createSpan;
 }
