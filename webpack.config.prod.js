@@ -1,4 +1,5 @@
 const path = require('path');
+const CleanPlugin = require('clean-webpack-plugin');
 module.exports = {
     mode: 'production',
     entry: './src/truncate-element.ts',
@@ -20,5 +21,7 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.js']
     },
-
+    plugins: [
+        new CleanPlugin.CleanWebpackPlugin()
+    ]
 };

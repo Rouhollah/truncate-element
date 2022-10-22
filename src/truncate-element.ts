@@ -236,5 +236,8 @@ export class TruncateElement extends HTMLElement {
     }
 
 }
-customElements.define('truncate-element', TruncateElement);
+if (!customElements.get('truncate-element')) {
+    customElements.define('truncate-element', TruncateElement);
+}
+
 

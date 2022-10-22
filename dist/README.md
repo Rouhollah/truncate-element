@@ -400,6 +400,8 @@ see the full examples on [Demos](#demo).
  [back to top](#installation)
 
  ## <a id="change"><span style="color:yellow">Changes:</span> </a>
+  - ### v2.0.1
+    * fix bug for `Uncaught DOMException: Failed to execute 'define' on 'CustomElementRegistry'`
   - ### v2.0.0
     * a feature has been Added to create custom function (important feature). See the example below:
     ```
