@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
-        "outDir": "./dist/",
-        "rootDir": "./src",
-        "baseUrl": ".",
+        "rootDirs": [
+            "./src",
+            "../sample"
+        ],
+        "outDir": "./sample-dist",
         "declaration": true,
         "sourceMap": true,
         "noImplicitAny": true,
@@ -15,13 +17,12 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "skipLibCheck": true,
-        "esModuleInterop": true,
         "lib": [
             "es5",
             "dom"
         ]
     },
-    "include": [
-        "src"
+    "exclude": [
+        "./src"
     ]
 }

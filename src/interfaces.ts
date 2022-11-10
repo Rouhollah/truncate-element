@@ -1,6 +1,3 @@
-import { ProccessModel } from "./base";
-
-
 export interface HighlighQuery {
   name?: string,
   color?: string
@@ -50,11 +47,4 @@ export interface Sible {
   children: Array<MyHighLightQuery>,
 }
 
-export interface Type<T> extends Function {
-  new(...args: any[]): T;
-}
-
-export interface GeneralModel {
-  model: Type<ProccessModel>
-}
 

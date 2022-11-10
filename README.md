@@ -39,7 +39,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 export class AppModule { }
 
 ```
-and add the  `truncate-element.js`  to  `angular.json`  file.
+and add the `truncate-element.js` or `truncate-element.min.js` to `angular.json` file.
 
 ```
 ...
@@ -47,14 +47,14 @@ and add the  `truncate-element.js`  to  `angular.json`  file.
     "build": {
         ...
         "scripts": [
-            "node_modules/truncate-element/truncate-element.js"
+            "node_modules/truncate-element/truncate-element[.min].js"
         ]
 },
 ```
 then use **truncate-element** tag in html, with one of the following ways that you prefer:
 
 <details>
- <summary>__#1.__ if you want process some data and after that truncate your string, or the __config__ attribute not ready yet,</summary>
+ <summary> <b>#1.</b> if you want process some data and after that truncate your string, or the __config__ attribute not ready yet,</summary>
 
 
 ```
@@ -92,7 +92,7 @@ elem?.setAttribute('config', this.myConfig);
 
 
 <details>
- <summary>__#2.__ use stringify object on config attribute directly:</summary>
+ <summary><b>#2.</b> use stringify object on config attribute directly:</summary>
 
 
 ```
@@ -107,7 +107,7 @@ and no need any change in its .ts file.
 
 
 <details>
- <summary>__#3.__ use with [attr.config]:</summary>
+ <summary><b>#3.</b> use with [attr.config]:</summary>
  
  
 ```
@@ -138,9 +138,9 @@ number: 50
 
 [back to top](#installation)
 ## <a id="react">Use in React</a> 
-first add `truncate-element.js` to your project. 
+first add `truncate-element.js` or `truncate-element.min.js` to your project. 
 
-`  <script src="%PUBLIC_URL%/truncate-element.js" type="text/javascript"></script>`
+`  <script src="%PUBLIC_URL%/truncate-element[.min].js" type="text/javascript"></script>`
 
 ```
 class App extends Component<AppProps, AppState> {
@@ -256,9 +256,9 @@ export default {
 ```
 [back to top](#installation)
 ## <a id="html">Use in Simple HTML</a>
-add `truncate-element.js` to .html file:
+add `truncate-element[.min].js` to .html file:
 
-`<script type="module" src="../dist/truncate-element.js"></script>`
+`<script type="module" src="../dist/truncate-element.min.js"></script>`
 
 and then use the `truncate-element` tag like other framework.
 
@@ -333,7 +333,7 @@ domain|array of suffix like ['com','ir','gov']|Array\<string\>|[]|1.8.0
 protocol|array of prefix like ['ftp','www','http']|Array\<string\>|[]|1.8.0
 target|refers to a window, tab or frame inside a page|string|_blank|1.8.0
 
-## Custom Model in v2.0.0
+## Custom Model in v2.0.0 and higher
  you can implement your favorite model for working on string. just define a class and extend ProccessModel. ProccessModel is abstract class with a process method that you should implement it. 
  
 ```
@@ -385,7 +385,7 @@ see the full examples on [Demos](#demo).
 
 
 - before pass `config` attribute to the element , you should convert to string with `JSON.stringify()`. 
-- default color for toggle button is <span style="color:#ff00ff">#ff00ff</span> and cursor style is pointer , if you want to use custom style, use the builtin `.toggleText` class.
+- default color for toggle button is `#ff00ff` and cursor style is pointer , if you want to use custom style, use the builtin `.toggleText` class.
   ```
   .toggleText{
       color: aqua !important;
@@ -393,13 +393,15 @@ see the full examples on [Demos](#demo).
   	font-style: italic;
   }
   ```
-- default color for hashtags is <span style="color:#1b95e0">#1b95e0</span> (from twitter), if you want to use custom style, use the builtin `.hashtag` class.
+- default color for hashtags is `#1b95e0` (from twitter), if you want to use custom style, use the builtin `.hashtag` class.
 
-- default color for mentions is <span style="color:#0095f6">#0095f6</span> (from twitter), if you want to use custom style, use the builtin `.mention` class.
+- default color for mentions is `#0095f6` (from twitter), if you want to use custom style, use the builtin `.mention` class.
 
  [back to top](#installation)
 
  ## <a id="change"><span style="color:yellow">Changes:</span> </a>
+  - ### v2.0.2
+    * fix bug for `Class extends value undefined is not a constructor or null`
   - ### v2.0.1
     * fix bug for `Uncaught DOMException: Failed to execute 'define' on 'CustomElementRegistry'`
   - ### v2.0.0

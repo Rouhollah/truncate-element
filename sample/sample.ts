@@ -1,5 +1,6 @@
-import { Config, Type } from "../src/interfaces";
-import { ProccessModel, TruncateElement, WordModel } from "../src/truncate-element";
+import { Config } from "../src/interfaces";
+import { ProccessModel, WordModel, Type } from "../src/services";
+import { TruncateElement } from "../src/truncate-element"
 
 const farsiConfig: Config = {
     less: 'پنهان',
@@ -52,9 +53,9 @@ export class AnyThingYouWant extends ProccessModel {
     }
 }
 
-
 const userModels: Array<Type<ProccessModel>> = [];
 userModels.push(AnyThingYouWant)
+
 
 const newConf: Config = {
     more: "show",
@@ -92,6 +93,10 @@ const newConf: Config = {
     },
 
 };
+
+// this line for using of TruncateElement because only import TruncateElement class is not enough.
+if (!!TruncateElement) { }
+//console.log(TruncateElement);
 
 let element = document.getElementById('test') as TruncateElement;
 element.addUserModel(TimeModel, AnyThingYouWant);

@@ -1,5 +1,29 @@
-import { ProccessModel, WordModel } from "./base";
 import { Config, HighlighQuery, IdentifyLink, MyHighLightQuery, Sible } from "./interfaces";
+
+export abstract class ProccessModel {
+    constructor(_config: any) { }
+    abstract process(word: string | WordModel): WordModel;
+}
+export class WordModel {
+    word: string = "";
+    length: number = 0;
+    type: string = "simple";
+    html?: string = "";
+
+    constructor(word: string) {
+        this.word = word;
+        this.length = word.length;
+    }
+
+}
+export interface Type<T> extends Function {
+    new(...args: any[]): T;
+}
+
+export interface GeneralModel {
+    model: Type<ProccessModel>
+}
+
 
 export class WordCut {
     Number: number;

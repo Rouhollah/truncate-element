@@ -1,7 +1,5 @@
-import { ProccessModel } from "./base";
-import { HighlighQuery, Config, IdentifyLink, GeneralModel, Type } from "./interfaces";
-export { Config, HighlighQuery, IdentifyLink } from "./interfaces";
-export { ProccessModel, WordModel } from "./base";
+import { HighlighQuery, Config, IdentifyLink } from "./interfaces";
+import { GeneralModel, ProccessModel, Type } from "./services";
 export declare class TruncateElement extends HTMLElement {
     _highlightQuery: Array<HighlighQuery | string>;
     config: Config;

@@ -1,8 +1,5 @@
-import { ProccessModel, WordModel } from "./base";
-import { HighlighQuery, Config, IdentifyLink, GeneralModel, Type } from "./interfaces";
-import { WordCut, Link, Hashtag, Mention, Highlight, NullModel } from "./services";
-export { Config, HighlighQuery, IdentifyLink } from "./interfaces";
-export { ProccessModel, WordModel } from "./base"
+import { HighlighQuery, Config, IdentifyLink } from "./interfaces";
+import { WordCut, Link, Hashtag, Mention, Highlight, NullModel, GeneralModel, ProccessModel, Type, WordModel } from "./services";
 
 export class TruncateElement extends HTMLElement {
     _highlightQuery: Array<HighlighQuery | string> = [];
@@ -72,7 +69,6 @@ export class TruncateElement extends HTMLElement {
         setTimeout(() => {
             this.initialValues();
         }, 0)
-
         this.connectedLoaded = true;
     }
 
