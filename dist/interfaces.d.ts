@@ -2,17 +2,6 @@ export interface HighlighQuery {
     name?: string;
     color?: string;
 }
-export interface FinalHighlighQuery {
-    name: string;
-    tag: string;
-}
-export interface MyHighLightQuery {
-    name: string;
-    color: string;
-    tag: string;
-    index: number;
-    existInAnotherQuery: boolean;
-}
 export interface IdentifyLink {
     enabled: boolean;
     hasQueryString?: boolean;
@@ -35,8 +24,13 @@ export interface Config {
     mention?: boolean;
     identifyLink?: IdentifyLink;
 }
-export interface Sible {
+export interface MyHighLightQuery {
+    name: string;
+    color: string;
+    tag: string;
+    index: number;
+    existInAnotherQuery: boolean;
+    content: string;
     parent: string;
     parentTag: string;
-    children: Array<MyHighLightQuery>;
 }

@@ -65,7 +65,7 @@ then use **truncate-element** tag in html, with one of the following ways that y
 ```
 and in its .ts file :
 ```
-myConfig = JSON.stringify({
+myConfig: Config= {
 more: "show",
 less: "hide",
 number: 50,
@@ -81,11 +81,11 @@ hasLiteral: true,
 identifyLink: {
                 enabled: true,
             }
-});
+};
 
 ngOnInit()  or  anyfunction() {
 var elem = document.getElementById("ele"); 
-elem?.setAttribute('config', this.myConfig); 
+elem?.setAttribute('config',JSON.stringify(this.myConfig)); 
 }
 ```
 </details>
@@ -307,7 +307,7 @@ and then use the `truncate-element` tag like other framework.
     </script>
 ```
 [back to top](#installation)
-## <a id="help">Help table</a>
+## <a id="help">Help table - Config properties</a>
  |property|description|type|default|version|
 |----|----|-----|-----|-----|
 |less|A word is displayed before the text is shortened|string|hide|1.0.0
@@ -347,7 +347,7 @@ see the full examples on [Demos](#demo).
 
 [back to top](#installation)
 ## <a id="note"><span style="color:yellow"> Note:</span> </a>
-- if determine protocol and domain in identifying property, URLs identify that have both protocol and domain. example:
+- if determine protocol and domain in `IdentifyLink` property, URLs identify that have both protocol and domain. example:
 ```
 ...
   mention: true,
@@ -371,7 +371,7 @@ see the full examples on [Demos](#demo).
 - You can use `Config` and `HighlighQuery` interfaces for type of properties.
 
   ```
-  import { Config , HighlightQuery} from 'truncate-element';
+  import { Config , HighlightQuery} from 'truncate-element/interfaces';
   ...
   conf: Config = {
     more: "show",
@@ -400,6 +400,11 @@ see the full examples on [Demos](#demo).
  [back to top](#installation)
 
  ## <a id="change"><span style="color:yellow">Changes:</span> </a>
+  - ### v2.4.0
+    * Improved highlight list review
+    * The addition of nested highlights in more than 2 steps
+    * Improved check and display of character count
+    * Improving Performance
   - ### v2.0.2
     * fix bug for `Class extends value undefined is not a constructor or null`
   - ### v2.0.1
@@ -430,7 +435,7 @@ see the full examples on [Demos](#demo).
           }
 
           const userModels: Array<Type<ProccessModel>> = [];
-          userModels.push(AnyThingYouWant);
+          userModels.push(TimeModel);
           ...
          let element = document.getElementById('test') as TruncateElement;
          element.addUserModel(TimeModel);

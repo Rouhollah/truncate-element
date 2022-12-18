@@ -1,4 +1,4 @@
-import { Config, IdentifyLink, MyHighLightQuery, Sible } from "./interfaces";
+import { Config, IdentifyLink, MyHighLightQuery } from "./interfaces";
 export declare abstract class ProccessModel {
     constructor(_config: any);
     abstract process(word: string | WordModel): WordModel;
@@ -69,19 +69,26 @@ export declare class Hashtag extends ProccessModel {
 export declare class Highlight extends ProccessModel {
     highlightQuery: Array<MyHighLightQuery>;
     highlightCondition: string;
-    nestedHighlightArray: Array<Sible>;
+    nestedHighlightArray: Array<MyHighLightQuery>;
+    checkedNestedHighlight: boolean;
     constructor(_config: Config);
     /**
-     * process model for highlighting
-     * @param model WordModel class
-     * @returns WordModel
-     */
-    process(model: WordModel): WordModel;
+    * finds words in highlightQuery array and color them
+    * @returns Array<Sible>
+    */
+    private findHighlightInAnother;
+    private transform;
     /** is object instance of HighlighQuery
      * @param {object}  object to check
      * @returns {boolean} true or false
     */
     private instanceOfHighlighQuery;
+    /**
+        * process model for highlighting
+        * @param model WordModel class
+        * @returns WordModel
+        */
+    process(model: WordModel): WordModel;
     /**
      * create span tag with favorite color
      * @param color
@@ -89,20 +96,6 @@ export declare class Highlight extends ProccessModel {
      * @returns string
      */
     private createTag;
-    /**
-     * finds words in highlightQuery array and color them
-     * @returns Array<Sible>
-     */
-    private findHighlightInAnother;
-    /**
-     * replace words after specific index
-     * @param text string
-     * @param regex search
-     * @param string replace
-     * @param number from
-     * @returns string
-     */
-    private replaceAfterIndex;
 }
 export declare class NullModel extends ProccessModel {
     /**

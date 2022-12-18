@@ -1,4 +1,4 @@
-import { Config, HighlighQuery, IdentifyLink, MyHighLightQuery, Sible } from "./interfaces";
+import { Config, HighlighQuery, IdentifyLink, MyHighLightQuery } from "./interfaces";
 
 export abstract class ProccessModel {
     constructor(_config: any) { }
@@ -23,7 +23,6 @@ export interface Type<T> extends Function {
 export interface GeneralModel {
     model: Type<ProccessModel>
 }
-
 
 export class WordCut {
     Number: number;
@@ -167,9 +166,10 @@ export class Hashtag extends ProccessModel {
 }
 
 export class Highlight extends ProccessModel {
-    highlightQuery: Array<MyHighLightQuery>;
-    highlightCondition: string;
-    nestedHighlightArray: Array<Sible>;
+    highlightQuery: Array<MyHighLightQuery> = [];
+    highlightCondition: string = '';
+    nestedHighlightArray: Array<MyHighLightQuery> = [];
+    checkedNestedHighlight: boolean = false;
     constructor(_config: Config) {
         super(_config);
         (<any>window).highlight = this;
@@ -187,6 +187,9 @@ export class Highlight extends ProccessModel {
                 high.tag = '';
                 high.index = 0;
                 high.existInAnotherQuery = false;
+                high.parent = '';
+                high.parentTag = '';
+                high.content = '';
                 return high as MyHighLightQuery;
             });
         }
@@ -200,15 +203,81 @@ export class Highlight extends ProccessModel {
                 return a.name.length - b.name.length;
             })
         }
-
-        this.nestedHighlightArray = this.findHighlightInAnother();
+        if (!this.checkedNestedHighlight)
+            this.nestedHighlightArray = this.findHighlightInAnother();
+        else
+            this.nestedHighlightArray = [];
     }
 
     /**
-     * process model for highlighting
-     * @param model WordModel class
-     * @returns WordModel
-     */
+    * finds words in highlightQuery array and color them
+    * @returns Array<Sible>
+    */
+    private findHighlightInAnother(): Array<MyHighLightQuery> {
+        const firstElement = this.highlightQuery[0];
+        firstElement.tag = this.createTag(firstElement.color, firstElement.name);
+        firstElement.existInAnotherQuery = false;
+        firstElement.content = '';
+        firstElement.parent = '';
+        firstElement.parentTag = '';
+
+        for (let i = 1; i < this.highlightQuery.length; i++) {
+            const currentElement = this.highlightQuery[i];
+            const perviousElement = this.highlightQuery[i - 1];
+            if (currentElement.name.includes(perviousElement.name)) {
+                this.transform(currentElement, perviousElement);
+                continue;
+            }
+            else {
+                let j = i;
+                while (j >= 1) {
+                    let pervious = this.highlightQuery[j - 1];
+                    if (currentElement.name.includes(pervious.name)) {
+                        this.transform(currentElement, pervious);
+                        break;
+                    }
+                    else if (j == 1) {
+                        currentElement.tag = this.createTag(currentElement.color, currentElement.name);
+                        currentElement.content = '';
+                        currentElement.parent = '';
+                        currentElement.parentTag = '';
+                    }
+                    j--;
+                }
+            }
+
+        }
+        const nestedArray = this.highlightQuery.filter(m => m.existInAnotherQuery);
+        this.highlightQuery = this.highlightQuery.filter(m => !m.existInAnotherQuery);
+        //console.log('highlightQuery=>', this.highlightQuery, 'nestedArray=>', nestedArray);
+
+        this.checkedNestedHighlight = true;
+        return nestedArray;
+    }
+
+
+    private transform(current: MyHighLightQuery, pervious: MyHighLightQuery) {
+        // name of current object is parent for pervious object
+        pervious.parent = current.name;
+        current.content = current.name.replace(pervious.name, pervious.tag);
+        pervious.parentTag = this.createTag(current.color, current.content);
+        current.tag = pervious.parentTag;
+        pervious.existInAnotherQuery = true;
+        current.existInAnotherQuery = false;
+    }
+
+    /** is object instance of HighlighQuery 
+     * @param {object}  object to check
+     * @returns {boolean} true or false
+    */
+    private instanceOfHighlighQuery(object: any): object is HighlighQuery {
+        return typeof object === 'string' ? false : 'name' in object;
+    }
+    /**
+        * process model for highlighting
+        * @param model WordModel class
+        * @returns WordModel
+        */
     process(model: WordModel): WordModel {
         if (!this.highlightQuery || !this.highlightQuery.length) {
             return model;
@@ -228,22 +297,27 @@ export class Highlight extends ProccessModel {
             return model;
         }
         else {
-            if (this.nestedHighlightArray.length || this.highlightQuery.length) {
-                for (const nested of this.nestedHighlightArray) {
-                    const regex = new RegExp(nested.parent, 'gmi');
+            if (this.nestedHighlightArray.length) {
+                for (let i = this.nestedHighlightArray.length; i--; i == 0) {
+                    const nested = this.nestedHighlightArray[i];
+                    const regex = new RegExp(nested.name, 'gmi');
                     if (regex.test(model.word)) {
                         regex.lastIndex = 0;
-                        model.html = model.word.replace(new RegExp(nested.parent, 'gm'), nested.parentTag);
-
+                        model.html = model.word.replace(new RegExp(nested.name, 'gm'), nested.tag);
+                        // return model;
+                        break;
                     }
-                    this.highlightQuery = this.highlightQuery.filter((h: MyHighLightQuery) => !h.existInAnotherQuery).filter((h: MyHighLightQuery) => h.name != nested.parent);
                 }
-
+            }
+            if (this.highlightQuery.length) {
                 for (const q of this.highlightQuery) {
                     const regex = new RegExp(q.name, 'gmi');
                     if (regex.test(model.word)) {
                         regex.lastIndex = 0;
-                        if (model.html) {
+                        if (model.html && model.html.split(q.name).length == 1) {
+                            model.html = model.word.replace(new RegExp(q.name, 'gmu'), q.tag);
+                        }
+                        else if (model.html) {
                             let tag = model.html.split(q.name)
                             for (let index = 0; index < tag.length; index++) {
                                 if (index == tag.length - 1)
@@ -260,24 +334,9 @@ export class Highlight extends ProccessModel {
                         }
                     }
                 }
-                if (model.html) {
-                    model.type = model.type.concat(' highlight');
-                    return model;
-                }
-                return model;
             }
-            else
-                return model;
+            return model;
         }
-
-    }
-
-    /** is object instance of HighlighQuery 
-     * @param {object}  object to check
-     * @returns {boolean} true or false
-    */
-    private instanceOfHighlighQuery(object: any): object is HighlighQuery {
-        return typeof object === 'string' ? false : 'name' in object;
     }
 
     /**
@@ -288,71 +347,6 @@ export class Highlight extends ProccessModel {
      */
     private createTag(color: string, word: string) {
         return `<span style="background:${color}">${word}</span>`;
-    }
-
-    /**
-     * finds words in highlightQuery array and color them
-     * @returns Array<Sible>
-     */
-    private findHighlightInAnother(): Array<Sible> {
-        const sibling: Array<Sible> = [];
-        this.highlightQuery.forEach((q) => {
-            for (let i = 0; i < this.highlightQuery.length; i++) {
-                const element = this.highlightQuery[i];
-                if (q.name.length >= element.name.length) {
-                    q.tag = this.createTag(q.color, q.name);
-                    q.existInAnotherQuery = false;
-                    continue;
-                }
-
-                if (element.name.includes(q.name)) {
-                    q.existInAnotherQuery = true;
-                    const s = sibling.find((s: Sible) => s.parent == element.name);
-                    if (s) {
-                        q.tag = this.createTag(q.color, q.name);
-                        q.index = element.name.indexOf(q.name);
-                        s.children.push(q);
-                    }
-                    else {
-                        const obj: Sible = {
-                            parent: '',
-                            parentTag: '',
-                            children: []
-                        }
-                        obj.parent = element.name;
-                        q.tag = this.createTag(q.color, q.name);
-                        q.index = element.name.indexOf(q.name);
-                        obj.children.push(q);
-                        sibling.push(obj);
-                    }
-                }
-            }
-        });
-        sibling.forEach((element: Sible) => {
-            let parent = element.parent;
-            element.children.sort((a, b) => a.index - b.index).forEach((child: MyHighLightQuery, i: number) => {
-                const pattern = new RegExp(child.name, 'gm');
-                const from = i == 0 ? parent.indexOf(child.name) : element.children[i - 1].tag.length;
-                parent = this.replaceAfterIndex(parent, pattern, child.tag, from);
-            })
-            element.parentTag = this.createTag(this.highlightQuery.find((h: MyHighLightQuery) => h.name == element.parent)!.color, parent);
-        })
-        return sibling;
-    }
-
-    /**
-     * replace words after specific index
-     * @param text string
-     * @param regex search 
-     * @param string replace 
-     * @param number from 
-     * @returns string
-     */
-    private replaceAfterIndex(text: string, search: RegExp, replace: string, from: number): string {
-        if (text.length > from) {
-            return text.slice(0, from) + text.slice(from).replace(search, replace);
-        }
-        return text;
     }
 }
 

@@ -1,5 +1,5 @@
 import { HighlighQuery, Config, IdentifyLink } from "./interfaces";
-import { GeneralModel, ProccessModel, Type } from "./services";
+import { GeneralModel, ProccessModel, Type, WordModel } from "./services";
 export declare class TruncateElement extends HTMLElement {
     _highlightQuery: Array<HighlighQuery | string>;
     config: Config;
@@ -21,13 +21,17 @@ export declare class TruncateElement extends HTMLElement {
     linkCount: number;
     hashtagCount: number;
     mentionCount: number;
-    replaceString: string;
     connectedLoaded: boolean;
     dataLoaded: boolean;
     tempHtml: string;
     wordArray: Array<string>;
     remainText: string;
     fullText: string;
+    truncatedWord: {
+        model: WordModel;
+        index: number;
+    };
+    processModels: Array<GeneralModel>;
     constructor();
     addUserModel(...userModel: Array<Type<ProccessModel>>): void;
     connectedCallback(): void;
@@ -39,6 +43,35 @@ export declare class TruncateElement extends HTMLElement {
     * @param text {string}
     */
     private main;
+    /**
+     * once calling each class
+     * @returns
+     */
+    private callOnceClasses;
+    /**
+     * review if the word is truncated has link or not
+     * @param word string
+     * @returns WordModel
+     */
+    private reviewTruncatedWordHasLink;
+    /**
+     * finally process all attributes of config and user models defined for each word
+     * @param _words WordModel[]
+     * @param instances ProccessModel[]
+     * @returns WordModel[]
+     */
+    private proccessOnWordModels;
+    /**
+     * create WordModel class of each wrod
+     * @param array {string[]}
+     * @returns string[]
+     */
+    private createWordModelFromString;
+    /**
+     * generate necessary classes for each word
+     * @returns GeneralModel[]
+     */
+    private generateModels;
     /**
      * display text in first time
      * @param text

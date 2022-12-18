@@ -41,13 +41,14 @@ export class TruncateElement extends HTMLElement {
     linkCount: number = 0;
     hashtagCount: number = 0;
     mentionCount: number = 0;
-    replaceString = "***";
     connectedLoaded = false;
     dataLoaded = false;
     tempHtml = "";
     wordArray: Array<string> = [];
     remainText: string = "";
     fullText: string = "";
+    truncatedWord = { model: new WordModel(''), index: 0 };
+    processModels: Array<GeneralModel> = [];
     constructor() {
         super();
         (<any>window).trun = this;
@@ -120,68 +121,147 @@ export class TruncateElement extends HTMLElement {
         this.dataLoaded = true;
     }
 
+
     /** main method, start working 
     * @param text {string}
     */
     private main(text: string): void {
-        if (!this.hasLiteral) text = text.replace(/(\r\n\t|\r\n|\n|\r\t)/gm, ' ');
+        if (!this.hasLiteral)
+            text = text.replace(/(\r\n\t|\r\n|\n|\r\t)/gm, ' ');
 
         this.text = text;
-        this.wordArray = text.split(" ").filter(f => this.hasLiteral ? true : f.length > 0);
-
-        const processModels: Array<GeneralModel> = [];
-
-        const _words: WordModel[] = [];
-        const nullModel = new NullModel(this.config);
-        for (const word of this.wordArray) {
-            _words.push(nullModel.process(word));
-
-        }
-
-        if (this.config.highlightList?.length) {
-            processModels.push({ model: Highlight });
-        }
-
-        if (this.config.identifyLink?.enabled)
-            processModels.push({ model: Link });
-
-        if (this.config.hashtag)
-            processModels.push({ model: Hashtag });
-
-        if (this.config.mention)
-            processModels.push({ model: Mention });
-
-        if (this.userModels?.length) {
-            this.userModels.forEach(user => {
-                processModels.push(user);
-            });
-        }
-
-        for (let model of _words) {
-            for (const gm of processModels) {
-                const wm = new gm.model(this.config);
-                if (model.length == 0) continue;
-                model = wm.process(model);
-            }
-        }
         if (text.length > this.number) {
             this.truncated = true;
             const wordCut = new WordCut(this.number);
-            text = this.completeWord ? wordCut.cut(text) : text.substring(0, this.number);
+            if (this.completeWord)
+                text = wordCut.cut(text)
+            else {
+                text = text.substring(0, this.number);
+                const last = this.text.split(" ")[text.split(" ").length - 1]
+                this.truncatedWord.model = this.reviewTruncatedWordHasLink(last);
+                this.truncatedWord.index = text.split(" ").length - 1;
+            }
         }
-        if (_words.length) {
-            this.remainText = _words.slice(0, text.split(" ").length).map(m => m.html ? m.html : m.word).join(" ") + " ... ";
-            this.fullText = _words.map(m => m.html ? m.html : m.word).join(" ");
+        // all necessary classes
+        this.processModels = this.generateModels();
+
+        // just once calling each class
+        const instances = this.callOnceClasses()
+
+        const cuttedArray = text.split(" ");
+        const fullArray = this.text.split(" ");
+        const _cuttedwords = this.createWordModelFromString(cuttedArray);
+        const _fullwords = this.createWordModelFromString(fullArray);
+
+        //process all attributes of config and user models defined for each word
+        const remain = this.proccessOnWordModels(_cuttedwords, instances);
+        const full = this.proccessOnWordModels(_fullwords, instances);
+
+        if (remain.length) {
+            this.remainText = remain.map(m => m.html ? m.html : m.word).join(" ") + " ... ";
+
+            if (!this.completeWord) {
+                const l = remain.pop();
+                if (l && this.truncatedWord.model.type.includes('link')) {
+                    const replacement = this.truncatedWord.model.word;
+                    this.remainText = this.remainText.replace(new RegExp(`<a href=${l.word} `), `<a href=${replacement} `)
+                }
+            }
         }
         else {
             this.remainText = text + " ... ";
+        }
+
+        if (full.length) [
+            this.fullText = full.map(m => m.html ? m.html : m.word).join(" ")
+        ]
+        else {
             this.fullText = this.text;
         }
 
         this.truncated ? this.initialText(this.remainText, this.more) : this.initialText(this.fullText);
-        //اعمال شود این کلاس قرار داده می شود  html در \n برای اینکه کاراکتر های
+        //This class is placed in order to apply \n characters in html
         if (this.hasLiteral)
             this.style.whiteSpace = 'pre-line';
+    }
+
+    /**
+     * once calling each class
+     * @returns 
+     */
+    private callOnceClasses() {
+        const instances: Array<ProccessModel> = [];
+        for (const gm of this.processModels) {
+            instances.push(new gm.model(this.config));
+        }
+        return instances;
+    }
+
+    /**
+     * review if the word is truncated has link or not
+     * @param word string
+     * @returns WordModel
+     */
+    private reviewTruncatedWordHasLink(word: string): WordModel {
+        const link = new Link(this.config);
+        return link.process(new WordModel(word));
+    }
+
+    /**
+     * finally process all attributes of config and user models defined for each word
+     * @param _words WordModel[]
+     * @param instances ProccessModel[]
+     * @returns WordModel[]
+     */
+    private proccessOnWordModels(_words: Array<WordModel>, instances: Array<ProccessModel>): Array<WordModel> {
+        for (let word of _words) {
+            for (const gm of instances) {
+                if (word.length == 0) continue;
+                word = gm.process(word);
+            }
+        }
+        return _words;
+    }
+
+    /**
+     * create WordModel class of each wrod
+     * @param array {string[]}
+     * @returns string[]
+     */
+    private createWordModelFromString(array: Array<string>) {
+        const _words: WordModel[] = [];
+        const nullModel = new NullModel(this.config);
+        for (const word of array) {
+            _words.push(nullModel.process(word));
+        }
+        return _words;
+    }
+
+    /**
+     * generate necessary classes for each word
+     * @returns GeneralModel[]
+     */
+    private generateModels(): Array<GeneralModel> {
+        const generalModels: Array<GeneralModel> = [];
+
+        if (this.config.highlightList?.length)
+            generalModels.push({ model: Highlight });
+
+        if (this.config.identifyLink?.enabled)
+            generalModels.push({ model: Link });
+
+        if (this.config.hashtag)
+            generalModels.push({ model: Hashtag });
+
+        if (this.config.mention)
+            generalModels.push({ model: Mention });
+
+        if (this.userModels?.length) {
+            this.userModels.forEach(user => {
+                generalModels.push(user);
+            });
+        }
+        return generalModels;
     }
 
     /**
@@ -197,8 +277,6 @@ export class TruncateElement extends HTMLElement {
         }
         else
             this.innerHTML = text;
-
-
     }
 
     /**

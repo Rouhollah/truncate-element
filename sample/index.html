@@ -9,9 +9,17 @@
 
 <body>
     <br>
-    <truncate-element id="test"
-        config='{"more":"show","less":"hide","number":50,"highlightList":[{"name":"c","color":"brown"},{"name":"swe","color":"pink"},{"name":"Lorem","color":"lightgreen"},{"name":"answer","color":"lightblue"},{"name":"Android","color":"brown"},{"name":"on","color":"gray"},{"name":"dolor","color":"red"},{"name":"Dolar","color":"pink"},"consequuntur",{"name":"equ","color":"blue"},"qui",{"name":"totam","color":"green"}],"highlightCondition":"like","completeWord":true,"hashtag":true,"hasLiteral":false,"mention":true,"identifyLink":{"enabled":true,"hasQueryString":true,"title":"","class":"roja sample","style":"","domain":[],"protocol":[],"target":"_blank"}}'>
-        Lorem #ipsum https://dolor.com sit 10:20 amet @consectetur adipisicing elit.
+    <truncate-element id="coloredTest">sequence query usually</truncate-element>
+    <br>
+    <br>
+    <br>
+    <truncate-element id="test" config='{"more":"show","less":"hide","number":380,"highlightCondition":"like","completeWord":false,"hashtag":true,"hasLiteral":true,"mention":true,
+        "highlightList":[{"name":"c","color":"brown"},{"name":"swe","color":"pink"},{"name":"Lorem","color":"lightgreen"},{"name":"answer","color":"lightblue"},
+        {"name":"Android","color":"brown"},{"name":"on","color":"gray"},{"name":"dolor","color":"red"},{"name":"Dolar","color":"pink"},"consequuntur",
+        {"name":"equ","color":"blue"},"qui",{"name":"totam","color":"green"}],
+        "identifyLink":{"enabled":true,"hasQueryString":true,"title":"",
+        "class":"roja sample","style":"","domain":[],"protocol":[],"target":"_blank"}}'>Lorem #ipsum https://dolor.com
+        sit 10:20 amet @consectetur adipisicing elit.
         Natus, consectetur deserunt optio fugit adipisci rerum.Iusto
         architecto natus quas error quibusdam expedita quae, odit explicabo
         dolorem velit odio mollitia omnis 2022/10/15 nulla enim ipsama sequi? Doloremque
@@ -30,7 +38,7 @@
     <br>
     <div class="persian" style="direction: rtl;">
         <truncate-element
-            config='{"more":"ادامه","less":"پنهان","number":50,"highlightList":[{"name":"لب","color":"pink"},"سوار",{"name":"جنگل","color":"green"},"جنگ",{"name":"کتاب","color":"#aabbcc"}],"highlightCondition":"like","completeWord":true,"hashtag":true,"hasLiteral":true}'>
+            config='{"more":"ادامه","less":"پنهان","number":55,"highlightCondition":"like","completeWord":false,"hashtag":true,"hasLiteral":false,"highlightList":[{"name":"لب","color":"pink"},"سوار",{"name":"جنگل","color":"green"},"جنگ",{"name":"کتاب","color":"#aabbcc"}]}'>
             در این #غربت @خانگی بگو هرچی باید بگی ، بگو هرچی باید بگی. برای شعر تازه
             اجازه بی اجازه برای شعر تازه اجازه بی اجازه. اگه سبزم اگه جنگل ، اگه ماهی
             اگه دریا ، اگه اسمم همه جا هست روی لبها تو #کتابا ، اگه عکس چل ستونم اگه
@@ -42,7 +50,7 @@
     <br>
     <br>
 
-
+    <button id="update">update lorem</button>
 
 </body>
 

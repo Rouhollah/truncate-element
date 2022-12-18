@@ -400,6 +400,11 @@ see the full examples on [Demos](#demo).
  [back to top](#installation)
 
  ## <a id="change"><span style="color:yellow">Changes:</span> </a>
+  - ### v2.4.0
+    * Improved highlight list review
+    * The addition of nested highlights in more than 2 steps
+    * Improved check and display of character count
+    * Improving Performance
   - ### v2.0.2
     * fix bug for `Class extends value undefined is not a constructor or null`
   - ### v2.0.1
