@@ -1,5 +1,11 @@
 ﻿# truncate-element
-you can use 'truncate-element' for any framework like Vue, React, Angular or any framework based on  javascript without any worries. it is a custom element that is created based on ngx-truncate-text, which I had already created myself for angular.
+You can use "turncate-element" for Vue, React, Angular or any JavaScript based framework without any worries. This is a custom element with which you can:
+- Identify hashtags, mentions and links.
+- Shorten and display the text as much as you want without losing the original text.
+- Highlight the words you want.
+- Create your own custom model.
+  
+and a few other features.
 ## <a id="demo">Demos</a>
 
 #### see demo on stackblitz for [Angular](https://stackblitz.com/edit/angular-ivy-sverbg), [React](https://stackblitz.com/edit/react-ts-pe2oey). [Vue](https://stackblitz.com/edit/vue-kslsxv) and [simple html](https://stackblitz.com/edit/web-platform-bhoxnu).
