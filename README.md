@@ -484,3 +484,5 @@ see the full examples on [Demos](#demo).
       ```npm run build```
   
   [back to top](#installation)
+
+  [buy a slice of pizza](https://www.buymeacoffee.com/torshizi1O)
