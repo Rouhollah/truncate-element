@@ -1,7 +1,7 @@
 {
   "name": "truncate-element",
-  "version": "2.4.0",
-  "description": "you can use 'truncate-element' for any framework like Vue, React, Angular or any framework based on  javascript without any worries. it is a custom element that is created based on ngx-truncate-text, which I had already created myself for angular.",
+  "version": "2.4.1",
+  "description": "With this package, you can make any changes you want on the text. Don't worry about the framework. It is a custom element and is compatible with all JavaScript frameworks.",
   "main": "truncate-element.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,6 +18,7 @@
     "truncate",
     "shortening",
     "finding hashtag",
+    "find hashtag",
     "finding-hashtag",
     "recognize hashtag",
     "recognize-hashtag",
