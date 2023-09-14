@@ -2,8 +2,8 @@
 You can use "turncate-element" for Vue, React, Angular or any JavaScript based framework without any worries. This is a custom element with which you can:
 - Identify hashtags, mentions and links.
 - Shorten and display the text as much as you want without losing the original text.
-- Highlight the words you want.
-- Create your own custom model.
+- Highlight the words you want even if they are nested.
+- Create your own custom model.(very hot)
   
 and a few other features.
 ## <a id="demo">Demos</a>
@@ -371,7 +371,7 @@ see the full examples on [Demos](#demo).
 ```
   and in text you have:
   ... https://www.sonys-emicon.com/en/technology/, ...  quam, www.irib.ir, quis, ftp://quod.tis, quos,...
-  Only this URL is recognized --> 'www.irib.ir' . for all URLs use blank array for domain and protocol properties.
+  Only this URL is recognized --> 'www.irib.ir'. **for identifing all URLs use blank array for domain and protocol properties.**
   
 
 - You can use `Config` and `HighlighQuery` interfaces for type of properties.
@@ -406,6 +406,8 @@ see the full examples on [Demos](#demo).
  [back to top](#installation)
 
  ## <a id="change"><span style="color:yellow">Changes:</span> </a>
+ - ### v2.4.1
+ * update README.md. Improved description. 
   - ### v2.4.0
     * Improved highlight list review
     * The addition of nested highlights in more than 2 steps
@@ -484,3 +486,7 @@ see the full examples on [Demos](#demo).
       ```npm run build```
   
   [back to top](#installation)
+
+If you like my energy and want to support my creative work, you can<br> [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/torshizi1O) <br> I'm a developer who loves to create packages for fun and learning. I've developed some cool stuff that you can check out on my GitHub page. Thanks for your generosity and appreciation! 😊
+
+
